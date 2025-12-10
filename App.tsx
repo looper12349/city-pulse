@@ -1,20 +1,22 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { CityProvider } from './src/context/CityContext';
+import { BookmarkProvider } from './src/context/BookmarkContext';
+import { AppNavigator } from './src/navigation/AppNavigator';
 
+/**
+ * Root App component
+ * - Wraps app with CityContext and BookmarkContext providers
+ * - Renders AppNavigator as root component
+ * - Initial city check for first launch is handled by AppNavigator
+ * Requirements: 1.1, 8.1
+ */
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <CityProvider>
+      <BookmarkProvider>
+        <StatusBar style="auto" />
+        <AppNavigator />
+      </BookmarkProvider>
+    </CityProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
