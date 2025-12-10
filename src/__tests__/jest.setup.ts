@@ -1,5 +1,24 @@
 // Jest setup file for mocking React Native modules
 
+// Mock @expo/vector-icons
+jest.mock('@expo/vector-icons', () => ({
+  Ionicons: 'Ionicons',
+}));
+
+// Mock expo-font
+jest.mock('expo-font', () => ({
+  loadAsync: jest.fn(),
+  isLoaded: jest.fn(() => true),
+}));
+
+// Mock expo-asset
+jest.mock('expo-asset', () => ({
+  Asset: {
+    loadAsync: jest.fn(),
+    fromModule: jest.fn(() => ({ downloadAsync: jest.fn() })),
+  },
+}));
+
 // Mock AsyncStorage
 const mockStorage: Record<string, string> = {};
 

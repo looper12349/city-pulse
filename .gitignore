@@ -13,6 +13,8 @@ expo-env.d.ts
 
 .kiro/*
 
+.env
+
 # Native
 .kotlin/
 *.orig.*

@@ -1,18 +1,14 @@
-import React from 'react';
-import {
-  View,
-  Text,
-  Image,
-  TouchableOpacity,
-  StyleSheet,
-} from 'react-native';
+import React, { useRef, useEffect } from 'react';
+import { View, Text, Image, StyleSheet, Animated } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { NewsArticle } from '../types';
+import { theme } from '../constants/theme';
+import { AnimatedPressable } from './AnimatedPressable';
 
 /**
- * NewsCard component
- * Displays article title, description, image, and date
+ * NewsCard component - Modern futuristic design
+ * Displays article with title, description, image, and date
  * Includes bookmark button with toggle functionality
- * Shows visual indicator for bookmarked articles
  * Requirements: 2.3, 5.5
  */
 
@@ -21,22 +17,7 @@ interface NewsCardProps {
   isBookmarked: boolean;
   onPress: () => void;
   onBookmarkPress: () => void;
-}
-
-/**
- * Formats a date string for display
- */
-function formatDate(dateString: string): string {
-  try {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-    });
-  } catch {
-    return dateString;
-  }
+  index?: number;
 }
 
 export function NewsCard({
@@ -44,61 +25,131 @@ export function NewsCard({
   isBookmarked,
   onPress,
   onBookmarkPress,
+  index = 0,
 }: NewsCardProps) {
-  return (
-    <TouchableOpacity
-      style={styles.container}
-      onPress={onPress}
-      activeOpacity={0.7}
-    >
-      {article.image ? (
-        <Image
-          source={{ uri: article.image }}
-          style={styles.image}
-          resizeMode="cover"
-        />
-      ) : (
-        <View style={[styles.image, styles.placeholderImage]}>
-          <Text style={styles.placeholderText}>No Image</Text>
-        </View>
-      )}
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const slideAnim = useRef(new Animated.Value(30)).current;
 
-      <View style={styles.content}>
-        <View style={styles.header}>
+  useEffect(() => {
+    Animated.parallel([
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 400,
+        delay: index * 100,
+        useNativeDriver: true,
+      }),
+      Animated.spring(slideAnim, {
+        toValue: 0,
+        tension: 50,
+        friction: 8,
+        delay: index * 100,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, []);
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffMs = now.getTime() - date.getTime();
+    const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+
+    if (diffHours < 1) return 'Just now';
+    if (diffHours < 24) return `${diffHours}h ago`;
+    if (diffHours < 48) return 'Yesterday';
+    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  };
+
+  return (
+    <Animated.View
+      style={[
+        styles.container,
+        {
+          opacity: fadeAnim,
+          transform: [{ translateY: slideAnim }],
+        },
+      ]}
+    >
+      <AnimatedPressable onPress={onPress} style={styles.card}>
+        {/* Image */}
+        {article.image ? (
+          <Image
+            source={{ uri: article.image }}
+            style={styles.image}
+            resizeMode="cover"
+          />
+        ) : (
+          <View style={styles.imagePlaceholder}>
+            <Ionicons
+              name="newspaper-outline"
+              size={32}
+              color={theme.colors.textMuted}
+            />
+          </View>
+        )}
+
+        {/* Content */}
+        <View style={styles.content}>
           <Text style={styles.title} numberOfLines={2}>
             {article.title}
           </Text>
-          <TouchableOpacity
-            style={styles.bookmarkButton}
-            onPress={onBookmarkPress}
-            hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-          >
-            <Text style={[styles.bookmarkIcon, isBookmarked && styles.bookmarked]}>
-              {isBookmarked ? '★' : '☆'}
+
+          {article.description && (
+            <Text style={styles.description} numberOfLines={2}>
+              {article.description}
             </Text>
-          </TouchableOpacity>
+          )}
+
+          {/* Footer */}
+          <View style={styles.footer}>
+            <View style={styles.dateContainer}>
+              <Ionicons
+                name="time-outline"
+                size={14}
+                color={theme.colors.textMuted}
+              />
+              <Text style={styles.date}>{formatDate(article.date)}</Text>
+            </View>
+
+            <AnimatedPressable
+              onPress={onBookmarkPress}
+              style={styles.bookmarkButton}
+            >
+              <Ionicons
+                name={isBookmarked ? 'bookmark' : 'bookmark-outline'}
+                size={22}
+                color={
+                  isBookmarked
+                    ? theme.colors.textPrimary
+                    : theme.colors.textMuted
+                }
+              />
+            </AnimatedPressable>
+          </View>
         </View>
-        
-        <Text style={styles.description} numberOfLines={3}>
-          {article.description}
-        </Text>
-        
-        <Text style={styles.date}>{formatDate(article.date)}</Text>
-      </View>
-    </TouchableOpacity>
+      </AnimatedPressable>
+    </Animated.View>
   );
 }
 
 /**
- * Extracts renderable content from a NewsCard for testing purposes
- * Returns an object with all displayed fields
+ * Extract content from NewsArticle for rendering
+ * Used for property testing
+ * Requirements: 2.3
  */
-export function extractNewsCardContent(article: NewsArticle): {
-  title: string;
-  description: string;
-  image: string;
-  date: string;
-} {
+export function extractNewsCardContent(article: NewsArticle) {
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffMs = now.getTime() - date.getTime();
+    const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+
+    if (diffHours < 1) return 'Just now';
+    if (diffHours < 24) return `${diffHours}h ago`;
+    if (diffHours < 48) return 'Yesterday';
+    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  };
+
   return {
     title: article.title,
     description: article.description,
@@ -109,64 +160,60 @@ export function extractNewsCardContent(article: NewsArticle): {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    marginHorizontal: 16,
-    marginVertical: 8,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+    marginHorizontal: theme.spacing.md,
+    marginVertical: theme.spacing.sm,
+  },
+  card: {
+    backgroundColor: theme.colors.surface,
+    borderRadius: theme.borderRadius.lg,
     overflow: 'hidden',
+    borderWidth: 1,
+    borderColor: theme.colors.border,
   },
   image: {
     width: '100%',
     height: 180,
+    backgroundColor: theme.colors.surfaceElevated,
   },
-  placeholderImage: {
-    backgroundColor: '#e0e0e0',
+  imagePlaceholder: {
+    width: '100%',
+    height: 120,
+    backgroundColor: theme.colors.surfaceElevated,
     justifyContent: 'center',
     alignItems: 'center',
   },
-  placeholderText: {
-    color: '#888',
-    fontSize: 14,
-  },
   content: {
-    padding: 12,
-  },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
+    padding: theme.spacing.md,
   },
   title: {
-    flex: 1,
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#1a1a1a',
-    marginRight: 8,
-  },
-  bookmarkButton: {
-    padding: 4,
-  },
-  bookmarkIcon: {
-    fontSize: 24,
-    color: '#ccc',
-  },
-  bookmarked: {
-    color: '#FFD700',
+    ...theme.typography.h3,
+    color: theme.colors.textPrimary,
+    marginBottom: theme.spacing.xs,
+    lineHeight: 24,
   },
   description: {
-    fontSize: 14,
-    color: '#666',
-    marginTop: 8,
+    ...theme.typography.bodySmall,
+    color: theme.colors.textSecondary,
+    marginBottom: theme.spacing.md,
     lineHeight: 20,
   },
+  footer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  dateContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: theme.spacing.xs,
+  },
   date: {
-    fontSize: 12,
-    color: '#999',
-    marginTop: 8,
+    ...theme.typography.caption,
+    color: theme.colors.textMuted,
+    textTransform: 'none',
+    letterSpacing: 0,
+  },
+  bookmarkButton: {
+    padding: theme.spacing.xs,
   },
 });

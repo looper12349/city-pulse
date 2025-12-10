@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "temp-expo-app",
-    "slug": "temp-expo-app",
+    "name": "City Pulse",
+    "slug": "city-pulse-app",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -25,6 +25,12 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "newsApiKey": "537493900a394ed5a108c4e92da84201"
+    },
+    "plugins": [
+      "expo-asset"
+    ]
   }
 }

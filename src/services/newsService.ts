@@ -1,9 +1,10 @@
 import axios, { AxiosError } from 'axios';
+import Constants from 'expo-constants';
 import { NewsArticle } from '../types';
 
 // NewsAPI.org configuration
 const NEWS_API_BASE_URL = 'https://newsapi.org/v2/everything';
-const NEWS_API_KEY = process.env.NEWS_API_KEY || 'YOUR_API_KEY_HERE';
+const NEWS_API_KEY = Constants.expoConfig?.extra?.newsApiKey || 'YOUR_API_KEY_HERE';
 
 /**
  * Response structure from NewsAPI.org

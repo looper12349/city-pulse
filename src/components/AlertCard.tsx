@@ -1,115 +1,216 @@
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import React, { useRef, useEffect } from 'react';
+import { View, Text, StyleSheet, Animated } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { EmergencyAlert } from '../types';
+import { theme } from '../constants/theme';
 
 /**
- * AlertCard component
- * Displays alert title, description, and timestamp
- * Applies color-coded styling based on severity level
+ * AlertCard component - Modern design
+ * Displays alert with color-coded styling based on severity
  * Requirements: 7.2, 7.3
  */
 
 interface AlertCardProps {
   alert: EmergencyAlert;
+  index?: number;
 }
 
-/**
- * Severity color mapping
- * Maps severity levels to their corresponding colors
- */
-export const SEVERITY_COLORS: Record<EmergencyAlert['severity'], string> = {
-  low: '#4CAF50',      // Green
-  medium: '#FF9800',   // Orange
-  high: '#F44336',     // Red
-  critical: '#9C27B0', // Purple
+type SeverityLevel = 'low' | 'medium' | 'high' | 'critical';
+
+const severityConfig: Record<
+  SeverityLevel,
+  { color: string; icon: keyof typeof Ionicons.glyphMap; label: string }
+> = {
+  low: {
+    color: theme.colors.success,
+    icon: 'information-circle',
+    label: 'LOW',
+  },
+  medium: {
+    color: theme.colors.warning,
+    icon: 'alert-circle',
+    label: 'MEDIUM',
+  },
+  high: {
+    color: theme.colors.error,
+    icon: 'warning',
+    label: 'HIGH',
+  },
+  critical: {
+    color: theme.colors.critical,
+    icon: 'alert',
+    label: 'CRITICAL',
+  },
 };
 
-/**
- * Gets the color for a given severity level
- */
-export function getSeverityColor(severity: EmergencyAlert['severity']): string {
-  return SEVERITY_COLORS[severity];
-}
+export function AlertCard({ alert, index = 0 }: AlertCardProps) {
+  const config = severityConfig[alert.severity] || severityConfig.low;
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const slideAnim = useRef(new Animated.Value(30)).current;
+  const pulseAnim = useRef(new Animated.Value(1)).current;
 
-/**
- * Formats a timestamp for display
- */
-function formatTimestamp(timestamp: string): string {
-  try {
+  useEffect(() => {
+    Animated.parallel([
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 400,
+        delay: index * 100,
+        useNativeDriver: true,
+      }),
+      Animated.spring(slideAnim, {
+        toValue: 0,
+        tension: 50,
+        friction: 8,
+        delay: index * 100,
+        useNativeDriver: true,
+      }),
+    ]).start();
+
+    // Pulse animation for critical alerts
+    if (alert.severity === 'critical') {
+      Animated.loop(
+        Animated.sequence([
+          Animated.timing(pulseAnim, {
+            toValue: 1.02,
+            duration: 500,
+            useNativeDriver: true,
+          }),
+          Animated.timing(pulseAnim, {
+            toValue: 1,
+            duration: 500,
+            useNativeDriver: true,
+          }),
+        ])
+      ).start();
+    }
+  }, []);
+
+  const formatTimestamp = (timestamp: string) => {
     const date = new Date(timestamp);
     return date.toLocaleString('en-US', {
-      year: 'numeric',
       month: 'short',
       day: 'numeric',
       hour: '2-digit',
       minute: '2-digit',
     });
-  } catch {
-    return timestamp;
-  }
-}
-
-export function AlertCard({ alert }: AlertCardProps) {
-  const severityColor = getSeverityColor(alert.severity);
+  };
 
   return (
-    <View style={[styles.container, { borderLeftColor: severityColor }]}>
-      <View style={styles.header}>
-        <View style={[styles.severityBadge, { backgroundColor: severityColor }]}>
-          <Text style={styles.severityText}>{alert.severity.toUpperCase()}</Text>
+    <Animated.View
+      style={[
+        styles.container,
+        {
+          opacity: fadeAnim,
+          transform: [{ translateY: slideAnim }, { scale: pulseAnim }],
+        },
+      ]}
+    >
+      <View style={[styles.card, { borderLeftColor: config.color }]}>
+        {/* Header */}
+        <View style={styles.header}>
+          <View style={styles.severityBadge}>
+            <Ionicons name={config.icon} size={16} color={config.color} />
+            <Text style={[styles.severityText, { color: config.color }]}>
+              {config.label}
+            </Text>
+          </View>
+          <View style={styles.timestampContainer}>
+            <Ionicons
+              name="time-outline"
+              size={12}
+              color={theme.colors.textMuted}
+            />
+            <Text style={styles.timestamp}>
+              {formatTimestamp(alert.timestamp)}
+            </Text>
+          </View>
         </View>
-        <Text style={styles.timestamp}>{formatTimestamp(alert.timestamp)}</Text>
+
+        {/* Content */}
+        <Text style={styles.title}>{alert.title}</Text>
+        <Text style={styles.description}>{alert.description}</Text>
+
+        {/* Indicator bar */}
+        <View style={[styles.indicatorBar, { backgroundColor: config.color }]} />
       </View>
-      
-      <Text style={styles.title}>{alert.title}</Text>
-      <Text style={styles.description}>{alert.description}</Text>
-    </View>
+    </Animated.View>
   );
 }
 
+/**
+ * Get severity color for property testing
+ * Requirements: 7.2
+ */
+export function getSeverityColor(severity: SeverityLevel): string {
+  return severityConfig[severity]?.color || theme.colors.textMuted;
+}
+
+/**
+ * Exported severity colors for testing
+ */
+export const SEVERITY_COLORS: Record<SeverityLevel, string> = {
+  low: theme.colors.success,
+  medium: theme.colors.warning,
+  high: theme.colors.error,
+  critical: theme.colors.critical,
+};
+
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#fff',
-    borderRadius: 8,
-    marginHorizontal: 16,
-    marginVertical: 8,
-    padding: 16,
+    marginHorizontal: theme.spacing.md,
+    marginVertical: theme.spacing.sm,
+  },
+  card: {
+    backgroundColor: theme.colors.surface,
+    borderRadius: theme.borderRadius.md,
+    padding: theme.spacing.md,
+    borderWidth: 1,
+    borderColor: theme.colors.border,
     borderLeftWidth: 4,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+    overflow: 'hidden',
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 12,
+    marginBottom: theme.spacing.sm,
   },
   severityBadge: {
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 4,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: theme.spacing.xs,
   },
   severityText: {
-    color: '#fff',
-    fontSize: 10,
+    ...theme.typography.caption,
     fontWeight: '700',
   },
+  timestampContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+  },
   timestamp: {
-    fontSize: 12,
-    color: '#888',
+    ...theme.typography.caption,
+    color: theme.colors.textMuted,
+    textTransform: 'none',
+    letterSpacing: 0,
   },
   title: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#1a1a1a',
-    marginBottom: 8,
+    ...theme.typography.h3,
+    color: theme.colors.textPrimary,
+    marginBottom: theme.spacing.xs,
   },
   description: {
-    fontSize: 14,
-    color: '#666',
+    ...theme.typography.bodySmall,
+    color: theme.colors.textSecondary,
     lineHeight: 20,
+  },
+  indicatorBar: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: 2,
+    opacity: 0.5,
   },
 });

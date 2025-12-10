@@ -1,39 +1,60 @@
-import React, { useState, useEffect } from 'react';
-import {
-  View,
-  FlatList,
-  Text,
-  StyleSheet,
-  SafeAreaView,
-} from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import { View, FlatList, Text, StyleSheet, Animated } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { Ionicons } from '@expo/vector-icons';
 import { EmergencyAlert } from '../types';
 import { AlertCard } from '../components/AlertCard';
 import { getAlerts } from '../services/alertService';
+import { theme } from '../constants/theme';
 
 /**
- * EmergencyAlerts screen
- * Displays alerts using AlertCard components
- * Shows empty state when no alerts exist
+ * EmergencyAlerts screen - Modern design
  * Requirements: 7.1, 7.3, 7.4
  */
 
 export function EmergencyAlerts() {
   const [alerts, setAlerts] = useState<EmergencyAlert[]>([]);
+  const fadeAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    // Load alerts on mount
     const loadedAlerts = getAlerts();
     setAlerts(loadedAlerts);
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 500,
+      useNativeDriver: true,
+    }).start();
   }, []);
 
-  const renderAlert = ({ item }: { item: EmergencyAlert }) => (
-    <AlertCard alert={item} />
+  const renderHeader = () => (
+    <View style={styles.header}>
+      <Text style={styles.title}>Alerts</Text>
+      <Text style={styles.subtitle}>
+        {alerts.length > 0
+          ? `${alerts.length} active alert${alerts.length !== 1 ? 's' : ''}`
+          : 'No active alerts'}
+      </Text>
+    </View>
   );
+
+  const renderAlert = ({
+    item,
+    index,
+  }: {
+    item: EmergencyAlert;
+    index: number;
+  }) => <AlertCard alert={item} index={index} />;
 
   const renderEmptyState = () => (
     <View style={styles.emptyContainer}>
-      <Text style={styles.emptyIcon}>✓</Text>
-      <Text style={styles.emptyTitle}>No Active Alerts</Text>
+      <View style={styles.emptyIconContainer}>
+        <Ionicons
+          name="checkmark-circle-outline"
+          size={64}
+          color={theme.colors.success}
+        />
+      </View>
+      <Text style={styles.emptyTitle}>All Clear</Text>
       <Text style={styles.emptyText}>
         There are no emergency alerts for your area at this time.
       </Text>
@@ -41,17 +62,21 @@ export function EmergencyAlerts() {
   );
 
   return (
-    <SafeAreaView style={styles.container}>
-      <FlatList
-        data={alerts}
-        keyExtractor={(item) => item.id}
-        renderItem={renderAlert}
-        contentContainerStyle={[
-          styles.listContent,
-          alerts.length === 0 && styles.emptyListContent,
-        ]}
-        ListEmptyComponent={renderEmptyState}
-      />
+    <SafeAreaView style={styles.container} edges={['bottom']}>
+      <Animated.View style={[styles.content, { opacity: fadeAnim }]}>
+        <FlatList
+          data={alerts}
+          keyExtractor={(item) => item.id}
+          renderItem={renderAlert}
+          ListHeaderComponent={renderHeader}
+          ListEmptyComponent={renderEmptyState}
+          contentContainerStyle={[
+            styles.listContent,
+            alerts.length === 0 && styles.emptyListContent,
+          ]}
+          showsVerticalScrollIndicator={false}
+        />
+      </Animated.View>
     </SafeAreaView>
   );
 }
@@ -59,10 +84,27 @@ export function EmergencyAlerts() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: theme.colors.background,
+  },
+  content: {
+    flex: 1,
+  },
+  header: {
+    paddingHorizontal: theme.spacing.lg,
+    paddingTop: theme.spacing.lg,
+    paddingBottom: theme.spacing.md,
+  },
+  title: {
+    ...theme.typography.h1,
+    color: theme.colors.textPrimary,
+    marginBottom: theme.spacing.xs,
+  },
+  subtitle: {
+    ...theme.typography.body,
+    color: theme.colors.textSecondary,
   },
   listContent: {
-    paddingVertical: 8,
+    paddingBottom: theme.spacing.xxl,
   },
   emptyListContent: {
     flexGrow: 1,
@@ -71,23 +113,29 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 40,
+    padding: theme.spacing.xl,
+    marginTop: 100,
   },
-  emptyIcon: {
-    fontSize: 48,
-    color: '#4CAF50',
-    marginBottom: 16,
+  emptyIconContainer: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    backgroundColor: theme.colors.surface,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: theme.spacing.lg,
+    borderWidth: 1,
+    borderColor: theme.colors.border,
   },
   emptyTitle: {
-    fontSize: 20,
-    fontWeight: '600',
-    color: '#1a1a1a',
-    marginBottom: 8,
+    ...theme.typography.h2,
+    color: theme.colors.textPrimary,
+    marginBottom: theme.spacing.sm,
   },
   emptyText: {
-    fontSize: 14,
-    color: '#666',
+    ...theme.typography.body,
+    color: theme.colors.textSecondary,
     textAlign: 'center',
-    lineHeight: 20,
+    lineHeight: 22,
   },
 });

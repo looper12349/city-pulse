@@ -1,11 +1,12 @@
 import React from 'react';
-import { View, StyleSheet, SafeAreaView } from 'react-native';
+import { View, StyleSheet } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { CityPicker } from '../components/CityPicker';
 import { useCityContext } from '../context/CityContext';
+import { theme } from '../constants/theme';
 
 /**
- * CitySelector screen
- * Displays CityPicker component and navigates to NewsFeed after city selection
+ * CitySelector screen - Modern design
  * Requirements: 1.1
  */
 
@@ -21,17 +22,13 @@ export function CitySelector({ navigation }: CitySelectorProps) {
 
   const handleCitySelect = (cityName: string) => {
     setSelectedCity(cityName);
-    // Navigate to NewsFeed after city selection
     navigation.replace('MainTabs');
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container} edges={['bottom']}>
       <View style={styles.content}>
-        <CityPicker
-          selectedCity={selectedCity}
-          onCitySelect={handleCitySelect}
-        />
+        <CityPicker selectedCity={selectedCity} onCitySelect={handleCitySelect} />
       </View>
     </SafeAreaView>
   );
@@ -40,7 +37,7 @@ export function CitySelector({ navigation }: CitySelectorProps) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: theme.colors.background,
   },
   content: {
     flex: 1,

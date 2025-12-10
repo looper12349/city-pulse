@@ -28,12 +28,12 @@ const emergencyAlertArbitrary = fc.record({
   }).map(timestamp => new Date(timestamp).toISOString()),
 });
 
-// Expected color mappings
+// Expected color mappings (matching theme.colors)
 const expectedColors: Record<EmergencyAlert['severity'], string> = {
-  low: '#4CAF50',      // Green
-  medium: '#FF9800',   // Orange
-  high: '#F44336',     // Red
-  critical: '#9C27B0', // Purple
+  low: '#4ADE80',      // Green (theme.colors.success)
+  medium: '#FBBF24',   // Yellow (theme.colors.warning)
+  high: '#F87171',     // Red (theme.colors.error)
+  critical: '#EF4444', // Dark Red (theme.colors.critical)
 };
 
 describe('Property 9: Alert Severity Color Mapping', () => {
