@@ -15,10 +15,7 @@ import { useCityContext } from '../context/CityContext';
 import { LoadingIndicator } from '../components/LoadingIndicator';
 import { theme } from '../constants/theme';
 
-/**
- * Navigation type definitions
- * Requirements: 8.1, 8.2
- */
+
 
 export type RootStackParamList = {
   CitySelector: undefined;

@@ -3,10 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const CITY_STORAGE_KEY = '@city_pulse/selected_city';
 
-/**
- * City context type definition
- * Requirements: 1.2, 1.3
- */
+
 interface CityContextType {
   selectedCity: string | null;
   setSelectedCity: (city: string) => void;

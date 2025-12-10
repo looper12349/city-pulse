@@ -1,9 +1,6 @@
 import { EmergencyAlert } from '../types';
 
-/**
- * Hardcoded emergency alerts for demonstration purposes
- * Requirements: 7.1, 7.2
- */
+
 const EMERGENCY_ALERTS: EmergencyAlert[] = [
   {
     id: 'alert-1',

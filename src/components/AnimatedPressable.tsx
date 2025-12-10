@@ -7,10 +7,6 @@ import {
   Animated,
 } from 'react-native';
 
-/**
- * AnimatedPressable - A pressable component with micro-animations
- * Provides scale and opacity feedback on press
- */
 
 interface AnimatedPressableProps extends PressableProps {
   style?: ViewStyle | ViewStyle[];

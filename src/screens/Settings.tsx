@@ -16,10 +16,7 @@ import { useCityContext } from '../context/CityContext';
 import { searchCitiesAPI, getPopularCities } from '../services/cityService';
 import { AnimatedPressable } from '../components/AnimatedPressable';
 
-/**
- * Settings screen
- * Allows users to update their city with search functionality
- */
+
 
 interface SettingsCityItemProps {
   item: City;

@@ -4,11 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { EmergencyAlert } from '../types';
 import { theme } from '../constants/theme';
 
-/**
- * AlertCard component - Modern design
- * Displays alert with color-coded styling based on severity
- * Requirements: 7.2, 7.3
- */
+
 
 interface AlertCardProps {
   alert: EmergencyAlert;

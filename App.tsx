@@ -6,13 +6,7 @@ import { BookmarkProvider } from './src/context/BookmarkContext';
 import { AppNavigator } from './src/navigation/AppNavigator';
 import { SplashScreen } from './src/screens/SplashScreen';
 
-/**
- * Root App component
- * - Shows splash screen on initial load
- * - Wraps app with CityContext and BookmarkContext providers
- * - Renders AppNavigator as root component
- * Requirements: 1.1, 8.1
- */
+
 export default function App() {
   const [showSplash, setShowSplash] = useState(true);
 

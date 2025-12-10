@@ -5,12 +5,7 @@ import { NewsArticle } from '../types';
 import { theme } from '../constants/theme';
 import { AnimatedPressable } from './AnimatedPressable';
 
-/**
- * NewsCard component - Modern futuristic design
- * Displays article with title, description, image, and date
- * Includes bookmark button with toggle functionality
- * Requirements: 2.3, 5.5
- */
+
 
 interface NewsCardProps {
   article: NewsArticle;

@@ -19,10 +19,7 @@ import { fetchNewsByCity, NewsServiceError } from '../services/newsService';
 import { theme } from '../constants/theme';
 import { getCityByName } from '../constants/cities';
 
-/**
- * NewsFeed screen - Modern futuristic design
- * Requirements: 2.1, 2.2, 2.4, 2.5, 3.1, 3.2, 3.3
- */
+
 
 interface NewsFeedProps {
   navigation: {

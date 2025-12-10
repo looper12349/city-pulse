@@ -1,11 +1,6 @@
 import { City } from '../types';
 
-/**
- * Expanded list of popular cities worldwide
- * Includes major cities from India and around the world
- * Sorted alphabetically by display name
- * Requirements: 1.4
- */
+
 
 export const CITIES: City[] = [
   // India - Major Cities

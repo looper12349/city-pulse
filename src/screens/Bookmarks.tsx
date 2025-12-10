@@ -8,10 +8,7 @@ import { useBookmarkContext } from '../context/BookmarkContext';
 import { LoadingIndicator } from '../components/LoadingIndicator';
 import { theme } from '../constants/theme';
 
-/**
- * Bookmarks screen - Modern design
- * Requirements: 5.4
- */
+
 
 interface BookmarksProps {
   navigation: {

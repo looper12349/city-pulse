@@ -3,9 +3,7 @@ import { NewsArticle } from '../types';
 
 const BOOKMARKS_STORAGE_KEY = '@city_pulse/bookmarks';
 
-/**
- * Custom error class for bookmark service errors
- */
+
 export class BookmarkServiceError extends Error {
   constructor(message: string) {
     super(message);

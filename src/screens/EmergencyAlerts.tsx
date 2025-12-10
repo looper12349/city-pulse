@@ -7,10 +7,7 @@ import { AlertCard } from '../components/AlertCard';
 import { getAlerts } from '../services/alertService';
 import { theme } from '../constants/theme';
 
-/**
- * EmergencyAlerts screen - Modern design
- * Requirements: 7.1, 7.3, 7.4
- */
+
 
 export function EmergencyAlerts() {
   const [alerts, setAlerts] = useState<EmergencyAlert[]>([]);

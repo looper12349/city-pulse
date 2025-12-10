@@ -2,11 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { View, StyleSheet, Animated, Text, ViewStyle } from 'react-native';
 import { theme } from '../constants/theme';
 
-/**
- * LoadingIndicator component - Pulse-themed loader
- * Matches the City Pulse branding with animated pulse rings
- * Requirements: 2.5, 4.3
- */
+
 
 interface LoadingIndicatorProps {
   style?: ViewStyle;

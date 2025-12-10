@@ -1,7 +1,3 @@
-/**
- * Modern Black & White Theme
- * Futuristic 2027 design system
- */
 
 export const theme = {
   colors: {

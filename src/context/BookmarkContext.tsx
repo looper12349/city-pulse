@@ -6,10 +6,7 @@ import {
   removeBookmark as removeBookmarkFromStorage,
 } from '../services/bookmarkService';
 
-/**
- * Bookmark context type definition
- * Requirements: 5.3, 6.3
- */
+
 interface BookmarkContextType {
   bookmarks: NewsArticle[];
   isLoading: boolean;

@@ -5,10 +5,7 @@ import { CityPicker } from '../components/CityPicker';
 import { useCityContext } from '../context/CityContext';
 import { theme } from '../constants/theme';
 
-/**
- * CitySelector screen - Modern design
- * Requirements: 1.1
- */
+
 
 interface CitySelectorProps {
   navigation: {

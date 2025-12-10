@@ -14,11 +14,7 @@ import { searchCities } from '../constants/cities';
 import { theme } from '../constants/theme';
 import { AnimatedPressable } from './AnimatedPressable';
 
-/**
- * CityPicker component - Modern futuristic design
- * Displays cities with search functionality
- * Requirements: 1.1, 1.4
- */
+
 
 interface CityPickerProps {
   selectedCity: string | null;

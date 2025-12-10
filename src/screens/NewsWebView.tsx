@@ -18,10 +18,7 @@ if (Platform.OS !== 'web') {
   WebView = require('react-native-webview').WebView;
 }
 
-/**
- * NewsWebView screen - Modern design
- * Requirements: 4.1, 4.2, 4.3, 4.4
- */
+
 
 interface NewsWebViewProps {
   route: {
