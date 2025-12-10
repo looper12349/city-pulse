@@ -10,15 +10,20 @@
     "splash": {
       "image": "./assets/splash-icon.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#0A0A0A"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.citypulse.app",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
+      "package": "com.citypulse.app",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#0A0A0A"
       },
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false
@@ -27,7 +32,10 @@
       "favicon": "./assets/favicon.png"
     },
     "extra": {
-      "newsApiKey": "537493900a394ed5a108c4e92da84201"
+      "newsApiKey": "537493900a394ed5a108c4e92da84201",
+      "eas": {
+        "projectId": "785695c9-b1ce-4e9b-893a-b065763a39c4"
+      }
     },
     "plugins": [
       "expo-asset"
