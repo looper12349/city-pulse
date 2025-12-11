@@ -7,11 +7,30 @@ A modern, futuristic mobile app that delivers city-specific news and emergency a
 ![Expo](https://img.shields.io/badge/Expo-54-000020?style=flat-square&logo=expo)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?style=flat-square&logo=typescript)
 
-## 🔗 Demo
+---
 
-**Web Demo:** [https://expo.dev/@indalamritesh/city-pulse-app](https://expo.dev/@indalamritesh/city-pulse-app)
+## 📲 Download & Demo
 
-**Android APK:** [Download from EAS](https://expo.dev/accounts/indalamritesh/projects/city-pulse-app/builds)
+<table>
+<tr>
+<td align="center">
+<a href="https://drive.google.com/file/d/1RxzSNffe2Au6YXX8td1HVbprpmiGKNYg/view?usp=drivesdk">
+<img src="https://img.shields.io/badge/Download-APK-green?style=for-the-badge&logo=android" alt="Download APK"/>
+</a>
+<br/>
+<sub>Android APK</sub>
+</td>
+<td align="center">
+<a href="https://drive.google.com/file/d/1-Xc1-r7uQAeSi0YelIwCGEOyUelCgLgu/view?usp=drivesdk">
+<img src="https://img.shields.io/badge/Watch-Demo-red?style=for-the-badge&logo=youtube" alt="Watch Demo"/>
+</a>
+<br/>
+<sub>Video Demo</sub>
+</td>
+</tr>
+</table>
+
+---
 
 ## ✨ Features
 
